@@ -53,8 +53,7 @@ def ridge_regression(y, tx, lambda_):
     mse = 1 / (2 * N) * np.sum(np.square(y - tx.dot(w)))
     return mse, w
 
-## least_squares_GD
-
+## task 1) least_squares_GD
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """ Linear regression using gradient descent
@@ -75,3 +74,12 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         w = gamma * gradient
  
     return w, loss
+
+## task 6) reg_logistic_regression
+
+def compute_loss_logistic_regression(y, tx, w):
+    """calculate loss for logistic regression"""
+    sigmoid = 1 / (1 + np.exp(-(tx @ w)))
+    loss = -1 / np.shape(tx)[0] * np.sum((1 - y) * np.log(1 - sigmoid) + y * np.log(sigmoid))
+    return loss
+
