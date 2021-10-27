@@ -4,13 +4,12 @@ import numpy as np
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """ Linear regression using gradient descent
     """
-    # we initialize it to a zeros vector
-    initial_w = np.zeros(tx.shape[1])
+    # we initialize w to a zeros vector
+    w = np.zeros(tx.shape[1])
 
     # Define parameters to store weight and loss
     loss = 0
-    w = initial_w
-
+    
     for n_iter in range(max_iters):
         # compute gradient and loss
         gradient = compute_gradient(y, tx, w)
@@ -21,7 +20,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
  
     return w, loss
 
-### least squares
+### task 3) least squares
 
 def least_squares(y, tx):
     """
@@ -45,7 +44,7 @@ def least_squares(y, tx):
     return mse, w
 
 
-### ridge regression
+### task 4) ridge regression
 
 def ridge_regression(y, tx, lambda_):
     """
