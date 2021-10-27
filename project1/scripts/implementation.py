@@ -77,9 +77,49 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 ## task 6) reg_logistic_regression
 
-def compute_loss_logistic_regression(y, tx, w):
-    """calculate loss for logistic regression"""
-    sigmoid = 1 / (1 + np.exp(-(tx @ w)))
-    loss = -1 / np.shape(tx)[0] * np.sum((1 - y) * np.log(1 - sigmoid) + y * np.log(sigmoid))
-    return loss
+def calculate_loss(y, tx, w):
+    """compute the cost by negative log likelihood."""
+    pred = sigmoid(tx.dot(w))
+    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    return np.squeeze(- loss)
 
+def penalized_logistic_regression(y, tx, w, lambda_):
+    """return the loss and gradient."""
+    num_samples = y.shape[0]
+    loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    return loss, gradient
+
+def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
+    """
+    Do one step of gradient descent, using the penalized logistic regression.
+    Return the loss and updated w.
+    """
+    loss, gradient = penalized_logistic_regression(y, tx, w, lambda_)
+    w -= gamma * gradient
+    return loss, w
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+    """Regularized logistic regression"""
+    if (initial_w is None):
+        initial_w = np.zeros(tx.shape[1])
+
+    w = initial_w
+    y = (1 + y) / 2
+    losses = []
+    threshold = 0.1
+
+    # start the logistic regression
+    for iter in range(max_iters):
+        # get loss and update w.
+        w, loss = learning_by_gradient_descent(y, tx, w, gamma)
+        losses.append(loss)
+
+        # converge criteria
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
+
+    norm = sum(w ** 2)
+    cost = w + lambda_ * norm / (2 * np.shape(w)[0])
+
+    return w, cost
