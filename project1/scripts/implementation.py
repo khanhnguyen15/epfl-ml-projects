@@ -52,3 +52,26 @@ def ridge_regression(y, tx, lambda_):
     
     mse = 1 / (2 * N) * np.sum(np.square(y - tx.dot(w)))
     return mse, w
+
+## least_squares_GD
+
+
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+    """ Linear regression using gradient descent
+    """
+    # if initial_w is None, we initialize it to a zeros vector
+    initial_w = np.zeros(tx.shape[1])
+
+    # Define parameters to store weight and loss
+    loss = 0
+    w = initial_w
+
+    for n_iter in range(max_iters):
+        # compute gradient and loss
+        gradient = compute_gradient(y, tx, w)
+        loss = compute_loss(y, tx, w)
+
+        # update w by gradient
+        w = gamma * gradient
+ 
+    return w, loss
