@@ -105,7 +105,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
         initial_w = np.zeros(tx.shape[1])
 
     w = initial_w
-    y = (1 + y) / 2
+    
     losses = []
     threshold = 0.1
 
