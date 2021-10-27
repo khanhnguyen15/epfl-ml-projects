@@ -6,12 +6,11 @@ def compute_gradient(y, tx, w):
     grad = -tx.T.dot(err) / len(err)
     return grad, err
 
-def compute_mse(y, tx, w):
-    """mean square error"""
-    err = y - tx.dot(w)
-    return 1/2*np.mean(err**2)
+def compute_loss(y, tx, w):
+    e = y - tx.dot(w)
+    return calculate_mse(e)
 
-def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+def least_squares_GD(y, tx,  max_iters, gamma):
     """ Linear regression using gradient descent
     """
     # we initialize w to a zeros vector
@@ -23,7 +22,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         # compute gradient and loss
         gradient,err = compute_gradient(y, tx, w)
-        loss = compute_mse(y, tx, w)
+        loss = compute_loss(y, tx, w)
 
         # update w by gradient
         w = w - gamma * gradient
