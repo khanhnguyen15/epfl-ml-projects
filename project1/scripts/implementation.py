@@ -1,5 +1,15 @@
 import numpy as np
 ## task 1) least_squares_GD
+def compute_gradient(y, tx, w):
+    """Compute the gradient."""
+    err = y - tx.dot(w)
+    grad = -tx.T.dot(err) / len(err)
+    return grad, err
+
+def compute_mse(y, tx, w):
+    """mean square error"""
+    err = y - tx.dot(w)
+    return 1/2*np.mean(err**2)
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """ Linear regression using gradient descent
@@ -12,11 +22,11 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     
     for n_iter in range(max_iters):
         # compute gradient and loss
-        gradient = compute_gradient(y, tx, w)
-        loss = compute_loss(y, tx, w)
+        gradient,err = compute_gradient(y, tx, w)
+        loss = compute_mse(y, tx, w)
 
         # update w by gradient
-        w = gamma * gradient
+        w = w - gamma * gradient
  
     return w, loss
 
