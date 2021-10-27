@@ -1,4 +1,25 @@
 import numpy as np
+## task 1) least_squares_GD
+
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+    """ Linear regression using gradient descent
+    """
+    # we initialize it to a zeros vector
+    initial_w = np.zeros(tx.shape[1])
+
+    # Define parameters to store weight and loss
+    loss = 0
+    w = initial_w
+
+    for n_iter in range(max_iters):
+        # compute gradient and loss
+        gradient = compute_gradient(y, tx, w)
+        loss = compute_loss(y, tx, w)
+
+        # update w by gradient
+        w = gamma * gradient
+ 
+    return w, loss
 
 ### least squares
 
@@ -53,27 +74,7 @@ def ridge_regression(y, tx, lambda_):
     mse = 1 / (2 * N) * np.sum(np.square(y - tx.dot(w)))
     return mse, w
 
-## task 1) least_squares_GD
 
-def least_squares_GD(y, tx, initial_w, max_iters, gamma):
-    """ Linear regression using gradient descent
-    """
-    # if initial_w is None, we initialize it to a zeros vector
-    initial_w = np.zeros(tx.shape[1])
-
-    # Define parameters to store weight and loss
-    loss = 0
-    w = initial_w
-
-    for n_iter in range(max_iters):
-        # compute gradient and loss
-        gradient = compute_gradient(y, tx, w)
-        loss = compute_loss(y, tx, w)
-
-        # update w by gradient
-        w = gamma * gradient
- 
-    return w, loss
 
 ## task 6) reg_logistic_regression
 
@@ -99,15 +100,15 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
     w -= gamma * gradient
     return loss, w
 
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, max_iters, gamma):
     """Regularized logistic regression"""
-    if (initial_w is None):
+   # we initialize it to a zeros vector
         initial_w = np.zeros(tx.shape[1])
 
     w = initial_w
     
     losses = []
-    threshold = 0.1
+    threshold = 0.1 # 1e-18
 
     # start the logistic regression
     for iter in range(max_iters):
