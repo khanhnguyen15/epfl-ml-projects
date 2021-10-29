@@ -111,7 +111,7 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
 def reg_logistic_regression(y, tx, lambda_, max_iters, gamma):
     """Regularized logistic regression"""
    # we initialize it to a zeros vector
-        initial_w = np.zeros(tx.shape[1])
+    initial_w = np.zeros(tx.shape[1])
 
     w = initial_w
     
