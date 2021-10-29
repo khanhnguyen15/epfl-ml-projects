@@ -64,5 +64,5 @@ def remove_outliers(y, x, mean_x, std_x):
     '''remove any rows that contain outliers values'''
     not_outliers = np.array([True for _ in range(x.shape[0])])
     for i in range(x.shape[1]):
-        not_outliers = not_outliers * (np.abs(x[:, i] - mean_x[i]) <= 5 * std_x[i])
+        not_outliers = not_outliers * (np.abs(x[:, i] - mean_x[i]) <= 3 * std_x[i])
     return y[not_outliers], x[not_outliers]
