@@ -25,7 +25,7 @@ def categorize(y, tX, ids):
     
     return (y[c_0], tX[c_0], ids[c_0]), (y[c_1], tX[c_1], ids[c_1]), (y[c_2], tX[c_2], ids[c_2]), (y[c_3], tX[c_3], ids[c_3])
 
-def remove_col(tX):
+def remove_uniform_col(tX):
     '''remove colum which are the same across the dataset (std = 0)'''
     col_to_remove = [22]
     for col in range(tX.shape[1]):
@@ -59,6 +59,22 @@ def standardize(x, mean_x, std_x):
 def change_y(y):
     y[y == -1.0] = 0
     return y
+
+
+def non_correlated_col(tX, threshold=0.9):
+    '''
+    Eliminate the columns which are highly correlated to another one in the features matrix.
+    Default threshold is 0.9.
+    Return the list of columns that we keep (needed to apply to the test set)
+    '''
+    col_to_remove = []
+    corr_matrix = np.corrcoef(tX, rowvar=False)
+    for i in range(tX.shape[1]):
+        for j in range(i):
+            if (corr_matrix[i, j] > threshold) and (j not in col_to_remove):
+                col_to_remove.append(i)
+    col_to_keep = [i for i in range(tX.shape[1]) if i not in col_to_remove]
+    return col_to_keep
 
 def remove_outliers(y, x, mean_x, std_x):
     '''remove any rows that contain outliers values'''

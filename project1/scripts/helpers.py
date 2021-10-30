@@ -15,6 +15,16 @@ def accuracy_score(y_pred, y_label):
 def f1_score(y_pred, y_label):
     return 
 
+def build_poly(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    N = x.shape[0]
+    d = x.shape[1]
+    feature_matrix = np.zeros((N, d * degree))
+    for i in range(d):
+        for j in range(1, degree + 1):
+            feature_matrix[:, i * degree + j - 1] = np.power(x[:, i], j)
+    return feature_matrix
+
 def build_k_indices(y, k_fold, seed):
     """build k indices for k-fold."""
     num_row = y.shape[0]
@@ -53,6 +63,23 @@ def ridge_cross_validation(y, x, lambdas):
         fold_accuracies = []
         for k in range(k_fold):
             kth_accuracy = ridge_kth_validation(y, x, k_indices, k, lambda_)
+            fold_accuracies.append(kth_accuracy)
+        accuracies.append(np.mean(fold_accuracies))
+    
+    return accuracies
+
+def poly_cross_validation(y, x, best_lambda, polys):
+    seed = 42
+    k_fold = 5
+    
+    k_indices = build_k_indices(y, k_fold, seed)
+    
+    accuracies = []
+    for degree in polys:
+        fold_accuracies = []
+        x_temp = build_poly(x, degree)
+        for k in range(k_fold):
+            kth_accuracy = ridge_kth_validation(y, x_temp, k_indices, k, best_lambda)
             fold_accuracies.append(kth_accuracy)
         accuracies.append(np.mean(fold_accuracies))
     

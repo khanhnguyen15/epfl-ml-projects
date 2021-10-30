@@ -14,3 +14,16 @@ def ridge_cross_validation_visualization(lambdas, accuracies):
     plt.legend(loc=2)
     plt.grid(True)
     plt.savefig("ridge_cross_validation")
+    
+def poly_cross_validation_visualization(polys, accuracies):
+    """visualization the curves of mse_tr and mse_te."""
+    colors = ['r', 'b', 'y', 'g']
+    labels = ['group_0', 'group_1', 'group_2', 'group_3']
+    for i in range(len(accuracies)):
+        plt.plot(polys, accuracies[i], marker=".", color=colors[i], label=labels[i])
+    plt.xlabel("lambda")
+    plt.ylabel("accuracy")
+    plt.title("cross validation")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("polynomial_cross_validation")
