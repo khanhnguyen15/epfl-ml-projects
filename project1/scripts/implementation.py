@@ -87,7 +87,56 @@ def ridge_regression(y, tx, lambda_):
     loss = compute_loss(y, tx, w)
     return w, loss
 
+## task 5) logistic regression
 
+def sigmoid(t):
+    """compute sigmoid function"""
+    expo = np.exp(-t)
+    result = 1.0/(1.0 + expo)
+    return result
+
+def compute_sigmoid_loss(tx, y, w):
+    """compute loss given by sigmoid function"""
+    predictions = sigmoid(tx @ w)
+    neg_losses_per_datapoint = -(y * np.log(predictions) + (1 - y) * np.log(1 - predictions))
+    return neg_losses_per_datapoint.sum()
+
+def compute_logistic_gradient(tx, y, w):
+    """computes gradient given by update equation"""
+    pred = sigmoid(tx @ w)
+    gradient = tx.T @ (pred - y) 
+    return gradient
+
+
+def learning_by_logistic_gradient_descent(y, tx, w, gamma):
+    """
+    Do one step of gradient descent using logistic regression.
+    Return the loss and the updated w.
+    """
+    # ***************************************************
+    loss = compute_sigmoid_loss(tx, y, w) 
+    # ***************************************************
+    gradient = compute_logistic_gradient(tx, y, w)
+    # ***************************************************
+    w = w - gamma * gradient
+    # ***************************************************
+    return loss, w 
+
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
+    
+    # init parameters
+    threshold = 1e-8
+    losses = []
+    w = initial_w
+    # start the logistic regression
+    for iter in range(max_iters):
+        # get loss and update w.
+        loss, w = learning_by_logistic_gradient_descent(y, tx, w, gamma)
+        # converge criterion
+        losses.append(loss)
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            return w, loss
+    return w, loss
 
 ## task 6) reg_logistic_regression
 
