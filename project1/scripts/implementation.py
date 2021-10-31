@@ -210,7 +210,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     w = initial_w
     
     losses = []
-    threshold = 0.1 # 1e-18
+    threshold = 0.1 # 1e-8
 
     # start the logistic regression
     for iter in range(max_iters):
