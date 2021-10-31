@@ -16,23 +16,24 @@ def compute_loss(y, tx, w):
 
 ## task 1) least_squares_GD
 
-def least_squares_GD(y, tx,  max_iters, gamma):
-    """ Linear regression using gradient descent"""
+def least_squares_GD(y, tx,initial_w,max_iters, gamma):
+    """ Linear regression using gradient descent
+    """
     # we initialize w to a zeros vector
-    w = np.zeros(tx.shape[1])
-
+    w = initial_w
     # Define parameters to store weight and loss
     loss = 0
-    
+    losses = []
     for n_iter in range(max_iters):
         # compute gradient and loss
         gradient,err = compute_gradient(y, tx, w)
         loss = compute_loss(y, tx, w)
-
+        # store w and loss
+        losses.append(loss)
         # update w by gradient
         w = w - gamma * gradient
  
-    return w, loss
+    return w, losses
 ### task 2) lest square SGD
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
@@ -194,11 +195,9 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
     w -= gamma * gradient
     return loss, w
 
-def reg_logistic_regression(y, tx, lambda_, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """Regularized logistic regression"""
    # we initialize it to a zeros vector
-    initial_w = np.zeros(tx.shape[1])
-
     w = initial_w
     
     losses = []
