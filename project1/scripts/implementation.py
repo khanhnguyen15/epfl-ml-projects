@@ -129,25 +129,25 @@ def ridge_regression(y, tx, lambda_):
 
 ## task 5) logistic regression
 
-def sigmoid_element(x):
-    "Numerically stable sigmoid function."
-    if x >= 0:
-        z = np.exp(-x)
-        return 1 / (1 + z)
-    else:
+# def sigmoid_element(x):
+#     "Numerically stable sigmoid function."
+#     if x >= 0:
+#         z = np.exp(-x)
+#         return 1 / (1 + z)
+#     else:
 
-        # if x is less than zero then z will be small, denom can't be
-        # zero because it's 1+z.
-        z = np.exp(x)
-        return z / (1 + z)
+#         # if x is less than zero then z will be small, denom can't be
+#         # zero because it's 1+z.
+#         z = np.exp(x)
+#         return z / (1 + z)
 
-def sigmoid(t):
-    """compute sigmoid function"""
-#     expo = np.exp(-t)
-#     result = 1.0 / (1.0 + expo)
+# def sigmoid(t):
+#     """compute sigmoid function"""
+# #     expo = np.exp(-t)
+# #     result = 1.0 / (1.0 + expo)
+# #     return result
+#     result = np.array([sigmoid_element(x) for x in t])
 #     return result
-    result = np.array([sigmoid_element(x) for x in t])
-    return result
 
 def compute_sigmoid_loss(tx, y, w):
     """compute loss given by sigmoid function"""
@@ -210,7 +210,6 @@ def calculate_loglikelihood_loss(y, tx, w):
 def penalized_logistic_regression(y, tx, w, lambda_):
     """return the loss and gradient."""
     num_samples = y.shape[0]
-    print(type(w.T))
     loss = calculate_loglikelihood_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
     return loss, gradient
@@ -221,7 +220,6 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
     Return the loss and updated w.
     """
     loss, gradient = penalized_logistic_regression(y, tx, w, lambda_)
-    w -= gamma * gradient
     return loss, w
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
@@ -233,9 +231,9 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     threshold = 0.1 # 1e-8
 
     # start the logistic regression
-    for iter in range(max_iters):
+    for i in range(max_iters):
         # get loss and update w.
-        w, loss = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
+        loss, w = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
         losses.append(loss)
 
         # converge criteria
