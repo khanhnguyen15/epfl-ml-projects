@@ -2,13 +2,13 @@ import numpy as np
 
 def compute_gradient(y, tx, w):
     """Compute the gradient."""
-    err = y - tx.dot(w)
-    grad = -tx.T.dot(err) / len(err)
-    return grad, err
+    e = y - tx.dot(w)
+    grad = -tx.T.dot(e) / len(e)
+    return grad, e
 
 def calculate_mse(e):
     """Calculate the mse for vector e."""
-    return 1 / 2 * np.mean(e ** 2)
+    return 1.0 / 2.0 * np.mean(e ** 2)
 
 def compute_loss(y, tx, w):
     e = y - tx.dot(w)
@@ -16,7 +16,7 @@ def compute_loss(y, tx, w):
 
 ## task 1) least_squares_GD
 
-def least_squares_GD(y, tx,initial_w,max_iters, gamma):
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """ Linear regression using gradient descent
     """
     # we initialize w to a zeros vector
@@ -26,7 +26,7 @@ def least_squares_GD(y, tx,initial_w,max_iters, gamma):
     losses = []
     for n_iter in range(max_iters):
         # compute gradient and loss
-        gradient,err = compute_gradient(y, tx, w)
+        gradient, e = compute_gradient(y, tx, w)
         loss = compute_loss(y, tx, w)
         # store w and loss
         losses.append(loss)
@@ -34,6 +34,7 @@ def least_squares_GD(y, tx,initial_w,max_iters, gamma):
         w = w - gamma * gradient
  
     return w, losses
+
 ### task 2) lest square SGD
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
@@ -55,16 +56,22 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """does stochastic GD on input parameters, returns final loss and w"""
     w = initial_w
+    N = y.shape[0]
+    batch_size = 1
+    num_batches = int(np.ceil(N / batch_size))
+    
     for n_iter in range(max_iters):
-        
+        batch_losses = []
         #select a batch of size 1
-        for y_batch, tx_batch in batch_iter(y, tx, batch_size=1, num_batches=1):
+        for y_batch, tx_batch in batch_iter(y, tx, batch_size, num_batches):
             
             #compute gradient and update w according to rule
             grad, _ = compute_gradient(y_batch, tx_batch, w)
             w = w - gamma * grad
-            loss = compute_loss(y, tx, w)
+            batch_loss = compute_loss(y, tx, w)
+            batch_losses.append(batch_loss)
             
+        loss = np.mean(batch_losses)
     return w, loss
 
 ### task 3) least squares
@@ -122,10 +129,24 @@ def ridge_regression(y, tx, lambda_):
 
 ## task 5) logistic regression
 
+def sigmoid_element(x):
+    "Numerically stable sigmoid function."
+    if x >= 0:
+        z = np.exp(-x)
+        return 1 / (1 + z)
+    else:
+
+        # if x is less than zero then z will be small, denom can't be
+        # zero because it's 1+z.
+        z = np.exp(x)
+        return z / (1 + z)
+
 def sigmoid(t):
     """compute sigmoid function"""
-    expo = np.exp(-t)
-    result = 1.0/(1.0 + expo)
+#     expo = np.exp(-t)
+#     result = 1.0 / (1.0 + expo)
+#     return result
+    result = np.array([sigmoid_element(x) for x in t])
     return result
 
 def compute_sigmoid_loss(tx, y, w):
@@ -146,13 +167,10 @@ def learning_by_logistic_gradient_descent(y, tx, w, gamma):
     Do one step of gradient descent using logistic regression.
     Return the loss and the updated w.
     """
-    # ***************************************************
     loss = compute_sigmoid_loss(tx, y, w) 
-    # ***************************************************
     gradient = compute_logistic_gradient(tx, y, w)
-    # ***************************************************
     w = w - gamma * gradient
-    # ***************************************************
+
     return loss, w 
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
@@ -182,6 +200,7 @@ def calculate_gradient(y, tx, w):
     pred = sigmoid(tx.dot(w))
     grad = tx.T.dot(pred - y)
     return grad
+
 def calculate_loglikelihood_loss(y, tx, w):
     """compute the cost by negative log likelihood."""
     pred = sigmoid(tx.dot(w))
@@ -191,6 +210,7 @@ def calculate_loglikelihood_loss(y, tx, w):
 def penalized_logistic_regression(y, tx, w, lambda_):
     """return the loss and gradient."""
     num_samples = y.shape[0]
+    print(type(w.T))
     loss = calculate_loglikelihood_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
     return loss, gradient

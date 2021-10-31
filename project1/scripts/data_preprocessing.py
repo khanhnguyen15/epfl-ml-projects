@@ -27,11 +27,12 @@ def clean(X):
     x[abs(x) ==  999] = np.nan
     mean_x = np.nanmean(x, axis=0)
     std_x = np.nanstd(x, axis=0)
+    median_x = np.nanmedian(x, axis=0)
     rows, cols = x.shape
     for i in range(rows):
         for j in range(cols):
             if(np.isnan(x[i][j])):
-                x[i][j] = mean_x[j]
+                x[i][j] = median_x[j]
                 
     return x, mean_x, std_x
 
