@@ -10,13 +10,14 @@ def predict_labels(weights, data):
     return y_pred
 
 def accuracy_score(y_pred, y_label):
+    """Return the accuracy score"""
     return (y_pred == y_label).sum() / y_label.shape[0]
 
 def f1_score(y_pred, y_label):
     return 
 
 def build_poly(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    """Polynomial basis functions for input data x, for j=0 up to j=degree."""
     N = x.shape[0]
     d = x.shape[1]
     feature_matrix = np.zeros((N, d * degree))
@@ -26,7 +27,7 @@ def build_poly(x, degree):
     return feature_matrix
 
 def build_k_indices(y, k_fold, seed):
-    """build k indices for k-fold."""
+    """Build k indices for k-fold."""
     num_row = y.shape[0]
     interval = int(num_row / k_fold)
     np.random.seed(seed)
@@ -36,7 +37,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 def ridge_kth_validation(y, x, k_indices, k, lambda_):
-    """return the loss of ridge regression."""
+    """Return the loss of ridge regression."""
     
     ind_test = k_indices[k]
     ind_train = np.delete(k_indices, k, 0).flatten()
@@ -47,12 +48,13 @@ def ridge_kth_validation(y, x, k_indices, k, lambda_):
     y_train = y[ind_train]
     x_train = x[ind_train]
     
-    _, weights = ridge_regression(y_train, x_train, lambda_)
+    weights, _ = ridge_regression(y_train, x_train, lambda_)
     y_pred = predict_labels(weights, x_train)
     
     return accuracy_score(y_pred, y_train)
 
 def ridge_cross_validation(y, x, lambdas):
+    """Run cross validation and store the accuracies based on the hyper-paremeters"""
     seed = 42
     k_fold = 5
     
@@ -69,6 +71,7 @@ def ridge_cross_validation(y, x, lambdas):
     return accuracies
 
 def poly_cross_validation(y, x, best_lambda, polys):
+    """Run cross validation and store the accuracies based on the hyper-paremeters"""
     seed = 42
     k_fold = 5
     

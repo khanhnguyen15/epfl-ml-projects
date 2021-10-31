@@ -1,32 +1,18 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
-# Cleaning the data - GJ
-# def DataCleaning(tx):
-#     '''
-#     Set 990 values (Outliers) to 0 in the data set.
-#     '''
-#     cd = np.c_[np.ones(x.shape[0]), tx] # cd = clean data
-    
-#     for i in range(cd.shape[0]):
-#         for j in range(cd.shape[1]):
-#             # filter out outlier with 0
-#             if cd[i, j] <= -990:
-#                 cd[i, j] = 0
-#     return cd
-
-# data categorize
+# data categorization
 def categorize(y, tX, ids):
-    '''divide the data set into 4 subgroups based on PRI_jet_num'''
+    """Divide the data set into 4 subgroups based on PRI_jet_num"""
     c_0 = np.where(tX[:, 22] == 0)[0]
     c_1 = np.where(tX[:, 22] == 1)[0]
     c_2 = np.where(tX[:, 22] == 2)[0]
     c_3 = np.where(tX[:, 22] == 3)[0]
     
-    return (y[c_0], tX[c_0], ids[c_0]), (y[c_1], tX[c_1], ids[c_1]), (y[c_2], tX[c_2], ids[c_2]), (y[c_3], tX[c_3], ids[c_3])
+    return [(y[c_0], tX[c_0], ids[c_0]), (y[c_1], tX[c_1], ids[c_1]), (y[c_2], tX[c_2], ids[c_2]), (y[c_3], tX[c_3], ids[c_3])]
 
 def remove_uniform_col(tX):
-    '''remove colum which are the same across the dataset (std = 0)'''
+    """Remove colum which are the same across the dataset (std = 0)"""
     col_to_remove = [22]
     for col in range(tX.shape[1]):
         if np.std(tX[:, col]) == 0:
@@ -56,17 +42,28 @@ def standardize(x, mean_x, std_x):
     tX = tX / std_x[np.newaxis, :]
     return tX
 
+def de_standardize(x, mean_x, std_x):
+    """Reverse the procedure of standardization."""
+    x = x * std_x
+    x = x + mean_x
+    return x
+
 def change_y(y):
+    """Change label from [-1, 1] to [0, 1]"""
     y[y == -1.0] = 0
     return y
 
+def unchange_y(y):
+    """Change label from [0, 1] to [-1, 1]"""
+    y[y == 0] = -1
+    return y
 
 def non_correlated_col(tX, threshold=0.9):
-    '''
+    """
     Eliminate the columns which are highly correlated to another one in the features matrix.
     Default threshold is 0.9.
     Return the list of columns that we keep (needed to apply to the test set)
-    '''
+    """
     col_to_remove = []
     corr_matrix = np.corrcoef(tX, rowvar=False)
     for i in range(tX.shape[1]):
@@ -77,7 +74,7 @@ def non_correlated_col(tX, threshold=0.9):
     return col_to_keep
 
 def remove_outliers(y, x, mean_x, std_x):
-    '''remove any rows that contain outliers values'''
+    """Remove any rows that contain outliers values"""
     not_outliers = np.array([True for _ in range(x.shape[0])])
     for i in range(x.shape[1]):
         not_outliers = not_outliers * (np.abs(x[:, i] - mean_x[i]) <= 3 * std_x[i])

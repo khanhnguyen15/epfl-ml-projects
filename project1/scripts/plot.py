@@ -21,7 +21,7 @@ def poly_cross_validation_visualization(polys, accuracies):
     labels = ['group_0', 'group_1', 'group_2', 'group_3']
     for i in range(len(accuracies)):
         plt.plot(polys, accuracies[i], marker=".", color=colors[i], label=labels[i])
-    plt.xlabel("lambda")
+    plt.xlabel("degree")
     plt.ylabel("accuracy")
     plt.title("cross validation")
     plt.legend(loc=2)

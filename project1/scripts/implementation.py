@@ -1,18 +1,23 @@
 import numpy as np
-## task 1) least_squares_GD
+
 def compute_gradient(y, tx, w):
     """Compute the gradient."""
     err = y - tx.dot(w)
     grad = -tx.T.dot(err) / len(err)
     return grad, err
 
+def calculate_mse(e):
+    """Calculate the mse for vector e."""
+    return 1 / 2 * np.mean(e ** 2)
+
 def compute_loss(y, tx, w):
     e = y - tx.dot(w)
     return calculate_mse(e)
 
+## task 1) least_squares_GD
+
 def least_squares_GD(y, tx,  max_iters, gamma):
-    """ Linear regression using gradient descent
-    """
+    """ Linear regression using gradient descent"""
     # we initialize w to a zeros vector
     w = np.zeros(tx.shape[1])
 
@@ -49,8 +54,8 @@ def least_squares(y, tx):
     b = tx.T.dot(y)
     w = np.linalg.solve(gram, b)
     
-    mse = 1 / (2 * N) * np.sum(np.square(y - tx.dot(w)))
-    return mse, w
+    loss = compute_loss(y, tx, w)
+    return w, loss
 
 
 ### task 4) ridge regression
@@ -79,8 +84,8 @@ def ridge_regression(y, tx, lambda_):
     b = tx.T.dot(y)
     w = np.linalg.solve(a, b)
     
-    mse = 1 / (2 * N) * np.sum(np.square(y - tx.dot(w)))
-    return mse, w
+    loss = compute_loss(y, tx, w)
+    return w, loss
 
 
 
