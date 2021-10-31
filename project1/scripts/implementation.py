@@ -173,7 +173,16 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 
 ## task 6) reg_logistic_regression
 
-def calculate_loss(y, tx, w):
+def sigmoid(t):
+    """apply sigmoid function on t."""
+    return 1.0 / (1 + np.exp(-t))
+
+def calculate_gradient(y, tx, w):
+    """compute the gradient of loss."""
+    pred = sigmoid(tx.dot(w))
+    grad = tx.T.dot(pred - y)
+    return grad
+def calculate_loglikelihood_loss(y, tx, w):
     """compute the cost by negative log likelihood."""
     pred = sigmoid(tx.dot(w))
     loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
@@ -182,7 +191,7 @@ def calculate_loss(y, tx, w):
 def penalized_logistic_regression(y, tx, w, lambda_):
     """return the loss and gradient."""
     num_samples = y.shape[0]
-    loss = calculate_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    loss = calculate_loglikelihood_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
     gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
     return loss, gradient
 
