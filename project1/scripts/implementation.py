@@ -215,7 +215,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     # start the logistic regression
     for iter in range(max_iters):
         # get loss and update w.
-        w, loss = learning_by_gradient_descent(y, tx, w, gamma)
+        w, loss = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
         losses.append(loss)
 
         # converge criteria
