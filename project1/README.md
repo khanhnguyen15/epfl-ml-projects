@@ -8,12 +8,13 @@ In this project, the task is to utilize classification techniques to predict whe
 
 **Instructions**:
 1. Download zip data file from [AiCrowd](https://www.aicrowd.com/challenges/epfl-machine-learning-higgs). Unzip the file and put `train.csv` and `test.csv` into the './data/' folder.
-3. `cd` into the './scripts/' folder and run `run.py`
+2. `cd` into the './scripts/' folder and run `run.py`
+3. The obtained result can be found in './data/' folder as `sample-submission.csv`
 
 ## Notebook
 
 There are three notebooks inside the projects. All of them are utilized duringn the experimental process of the project.
-- **`pands_isnights`**: Use `pandas` to examine the dataframe. The use of `pandas` is only for EDA purpose and is not included in the scope of the project.
+- **`pandas_insights`**: Use `pandas` to examine the dataframe. The use of `pandas` is only for EDA purpose and is not included in the scope of the project.
 - **`project1_non_normalized`**: Apply different machine learning methods to the processed dataset without normalization.
 - **`project1_normalized`**: Apply different machine learning methods to the processed dataset with normalization.
 
