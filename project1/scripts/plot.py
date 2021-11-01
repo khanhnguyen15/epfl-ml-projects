@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def ridge_cross_validation_visualization(lambdas, accuracies):
-    """visualization the curves of mse_tr and mse_te."""
+    """visualization the curves of accuracies for 4 groups of data"""
     colors = ['r', 'b', 'y', 'g']
     labels = ['group_0', 'group_1', 'group_2', 'group_3']
     for i in range(len(accuracies)):
@@ -13,10 +13,10 @@ def ridge_cross_validation_visualization(lambdas, accuracies):
     plt.title("cross validation")
     plt.legend(loc=2)
     plt.grid(True)
-    plt.savefig("ridge_cross_validation")
+    plt.savefig("./img/ridge_cross_validation")
     
 def poly_cross_validation_visualization(polys, accuracies):
-    """visualization the curves of mse_tr and mse_te."""
+    """visualization the curves of accuracies for 4 groups of data"""
     colors = ['r', 'b', 'y', 'g']
     labels = ['group_0', 'group_1', 'group_2', 'group_3']
     for i in range(len(accuracies)):
@@ -26,4 +26,4 @@ def poly_cross_validation_visualization(polys, accuracies):
     plt.title("cross validation")
     plt.legend(loc=2)
     plt.grid(True)
-    plt.savefig("polynomial_cross_validation")
+    plt.savefig("./img/polynomial_cross_validation")

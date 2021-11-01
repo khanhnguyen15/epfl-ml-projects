@@ -17,8 +17,7 @@ def compute_loss(y, tx, w):
 ## task 1) least_squares_GD
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
-    """ Linear regression using gradient descent
-    """
+    """ Linear regression using gradient descent"""
     # we initialize w to a zeros vector
     w = initial_w
     # Define parameters to store weight and loss
@@ -39,7 +38,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     
-    """returns a randomized minibatch for Stochastic Gradient Descent"""
+    """Returns a randomized minibatch for Stochastic Gradient Descent"""
     data_size = len(y)
 
     shuffle_indices = np.random.permutation(np.arange(data_size))
@@ -54,7 +53,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 
 
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
-    """does stochastic GD on input parameters, returns final loss and w"""
+    """Apply stochastic GD on input parameters, returns final loss and w"""
     w = initial_w
     N = y.shape[0]
     batch_size = 1
@@ -77,13 +76,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 ### task 3) least squares
 
 def least_squares(y, tx):
-    """
-    apply least squares with normal linear basis
-    returns: mse loss and optimized weights
-    params: y (class labels)
-            tx (features)
-            lambda_ (regularization rate)
-    """
+    """Apply least squares with normal linear matrix equations"""
     # num datapoints
     N = y.shape[0]
     
@@ -101,13 +94,7 @@ def least_squares(y, tx):
 ### task 4) ridge regression
 
 def ridge_regression(y, tx, lambda_):
-    """
-    apply ridge regression with L2-norm
-    returns: mse loss and optimized weights
-    params: y (class labels)
-            tx (features)
-            lambda_ (regularization rate)
-    """
+    """Apply ridge regression with L2-norm"""
     # num datapoints
     N = tx.shape[0]
     
@@ -129,46 +116,29 @@ def ridge_regression(y, tx, lambda_):
 
 ## task 5) logistic regression
 
-# def sigmoid_element(x):
-#     "Numerically stable sigmoid function."
-#     if x >= 0:
-#         z = np.exp(-x)
-#         return 1 / (1 + z)
-#     else:
+def sigmoid(t):
+    """apply sigmoid function on t."""
+    return 1.0 / (1 + np.exp(-t))
 
-#         # if x is less than zero then z will be small, denom can't be
-#         # zero because it's 1+z.
-#         z = np.exp(x)
-#         return z / (1 + z)
-
-# def sigmoid(t):
-#     """compute sigmoid function"""
-# #     expo = np.exp(-t)
-# #     result = 1.0 / (1.0 + expo)
-# #     return result
-#     result = np.array([sigmoid_element(x) for x in t])
-#     return result
-
-def compute_sigmoid_loss(tx, y, w):
+def compute_sigmoid_loss(y, tx, w):
     """compute loss given by sigmoid function"""
-    predictions = sigmoid(tx @ w)
+    predictions = sigmoid(tx.dot(w))
     neg_losses_per_datapoint = -(y * np.log(predictions) + (1 - y) * np.log(1 - predictions))
     return neg_losses_per_datapoint.sum()
 
-def compute_logistic_gradient(tx, y, w):
+def compute_logistic_gradient(y, tx, w):
     """computes gradient given by update equation"""
-    pred = sigmoid(tx @ w)
-    gradient = tx.T @ (pred - y) 
+    pred = sigmoid(tx.dot(w))
+    gradient = tx.T.dot(pred - y) 
     return gradient
-
 
 def learning_by_logistic_gradient_descent(y, tx, w, gamma):
     """
     Do one step of gradient descent using logistic regression.
     Return the loss and the updated w.
     """
-    loss = compute_sigmoid_loss(tx, y, w) 
-    gradient = compute_logistic_gradient(tx, y, w)
+    loss = compute_sigmoid_loss(y, tx, w) 
+    gradient = compute_logistic_gradient(y, tx, w)
     w = w - gamma * gradient
 
     return loss, w 
@@ -189,29 +159,13 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
             return w, loss
     return w, loss
 
+
 ## task 6) reg_logistic_regression
 
-def sigmoid(t):
-    """apply sigmoid function on t."""
-    return 1.0 / (1 + np.exp(-t))
-
-def calculate_gradient(y, tx, w):
-    """compute the gradient of loss."""
-    pred = sigmoid(tx.dot(w))
-    grad = tx.T.dot(pred - y)
-    return grad
-
-def calculate_loglikelihood_loss(y, tx, w):
-    """compute the cost by negative log likelihood."""
-    pred = sigmoid(tx.dot(w))
-    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
-    return np.squeeze(- loss)
-
 def penalized_logistic_regression(y, tx, w, lambda_):
-    """return the loss and gradient."""
-    num_samples = y.shape[0]
-    loss = calculate_loglikelihood_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
-    gradient = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    """Return the loss and gradient."""
+    loss = compute_sigmoid_loss(y, tx, w) + lambda_ * np.squeeze(w.T.dot(w))
+    gradient = compute_logistic_gradient(y, tx, w) + 2 * lambda_ * w
     return loss, gradient
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
@@ -224,7 +178,7 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """Regularized logistic regression"""
-   # we initialize it to a zeros vector
+    # we initialize it to a zeros vector
     w = initial_w
     
     losses = []
