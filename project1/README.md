@@ -8,7 +8,8 @@ In this project, the task is to utilize classification techniques to predict whe
 
 **Instructions**:
 1. Download zip data file from [AiCrowd](https://www.aicrowd.com/challenges/epfl-machine-learning-higgs). Unzip the file and put `train.csv` and `test.csv` into the './data/' folder.
-3. `cd` into the './scripts/' folder and run `run.py`
+2. `cd` into the './scripts/' folder and run `run.py`
+3. The obtained result can be found in './data/' folder as `sample-submission.csv`
 
 ## Notebook
 
